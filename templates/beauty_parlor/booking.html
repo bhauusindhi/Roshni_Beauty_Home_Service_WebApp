@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Service - Roshni Beauty Parlor{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card shadow-lg">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-calendar-plus"></i> Book Your Service</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" id="booking-form">
+              {% csrf_token %}
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="{{ form.service.id_for_label }}" class="form-label">Select Service *</label>
+                  {{ form.service }}
+                  {% if form.service.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.service.errors.0 }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Service Price</label>
+                  <div class="form-control-plaintext" id="service-price">
+                    <span class="text-primary fw-bold">Select a service to see price</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="{{ form.date.id_for_label }}" class="form-label">Preferred Date *</label>
+                  {{ form.date }}
+                  {% if form.date.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.date.errors.0 }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="{{ form.time.id_for_label }}" class="form-label">Preferred Time *</label>
+                  {{ form.time }}
+                  {% if form.time.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.time.errors.0 }}
+                  </div>
+                  {% endif %}
+                  <small class="form-text text-muted">We provide services between 9:00 AM and 8:00 PM</small>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="{{ form.address.id_for_label }}" class="form-label">Service Address *</label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.address.errors.0 }}
+                </div>
+                {% endif %}
+                <small class="form-text text-muted">Please provide your complete address for home service delivery</small>
+              </div>
+
+              <div class="mb-4">
+                <label for="{{ form.special_requests.id_for_label }}" class="form-label">Special Requests</label>
+                {{ form.special_requests }}
+                {% if form.special_requests.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.special_requests.errors.0 }}
+                </div>
+                {% endif %}
+                <small class="form-text text-muted">Any special instructions or preferences (optional)</small>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-calendar-check"></i> Confirm Booking
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card shadow-lg">
+          <div class="card-header bg-light">
+            <h4 class="mb-0"><i class="fas fa-user"></i> Your Information</h4>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <strong>Name:</strong> {{ user.get_full_name|default:user.username }}
+            </div>
+            <div class="mb-3"><strong>Email:</strong> {{ user.email }}</div>
+            <div class="mb-3"><strong>Phone:</strong> {{ user.profile.phone|default:"Not provided" }}</div>
+            <div class="mb-3"><strong>Default Address:</strong> {{ user.profile.address|default:"Not provided" }}</div>
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-edit"></i> Update Profile
+            </a>
+          </div>
+        </div>
+
+        <div class="card shadow-lg mt-4">
+          <div class="card-header bg-light">
+            <h4 class="mb-0"><i class="fas fa-info-circle"></i> Booking Information</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled">
+              <li class="mb-2"><i class="fas fa-check text-success"></i> All services are home delivery</li>
+              <li class="mb-2"><i class="fas fa-check text-success"></i> Professional beauticians</li>
+              <li class="mb-2"><i class="fas fa-check text-success"></i> Premium quality products</li>
+              <li class="mb-2"><i class="fas fa-check text-success"></i> Flexible timing</li>
+              <li class="mb-2"><i class="fas fa-check text-success"></i> Easy cancellation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card shadow-lg mt-4">
+          <div class="card-header bg-light">
+            <h4 class="mb-0"><i class="fas fa-phone"></i> Need Help?</h4>
+          </div>
+          <div class="card-body">
+            <p class="mb-3">Contact us for any questions about booking:</p>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-phone text-primary"></i> +91 98765 43210</li>
+              <li><i class="fas fa-envelope text-primary"></i> info@roshnibeauty.com</li>
+            </ul>
+            <a href="{% url 'contact' %}" class="btn btn-outline-primary">
+              <i class="fas fa-envelope"></i> Contact Support
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const serviceSelect = document.getElementById("{{ form.service.id_for_label }}");
+    const priceDisplay = document.getElementById("service-price");
+    const priceData = serviceSelect.getAttribute("data-prices");
+
+    const prices = {};
+    if (priceData) {
+      priceData.split("|").forEach((item) => {
+        const [id, price] = item.split(":");
+        prices[id] = price;
+      });
+    }
+
+    serviceSelect.addEventListener("change", function () {
+      const selectedServiceId = this.value;
+      const price = prices[selectedServiceId];
+      if (price) {
+        priceDisplay.innerHTML = `<span class="text-success fw-bold">₹${price}</span>`;
+      } else {
+        priceDisplay.innerHTML = '<span class="text-primary fw-bold">Select a service to see price</span>';
+      }
+    });
+
+    const dateInput = document.getElementById("{{ form.date.id_for_label }}");
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.setAttribute("min", today);
+  });
+</script>
+{% endblock %}

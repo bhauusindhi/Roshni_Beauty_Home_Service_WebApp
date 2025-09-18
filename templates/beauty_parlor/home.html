@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}Roshni Beauty Parlor - Home Services{% endblock %}
+{% block content %}
+
+<!-- Enhanced Image Slider + Hero Section -->
+<div class="carousel-container">
+  <div class="beauty-tag">Premium Beauty Services</div>
+  <div class="special-offer">Special Offer -20%</div>
+
+  <div class="carousel-slides">
+    <!-- Slide 1 -->
+    <div class="carousel-slide">
+      <img src="https://media.istockphoto.com/id/1269854822/photo/asian-female-makeup-artist-applying-makeup-on-woman-face.jpg?s=612x612&w=0&k=20&c=FQdIxbJPofaccD-4RrWbEwJ_BfRYDUYB96neNiKgo-w=" alt="Bridal Makeup"/>
+    </div>
+    <!-- Slide 2 -->
+    <div class="carousel-slide">
+      <img src="https://images.pexels.com/photos/208052/pexels-photo-208052.jpeg" alt="Makeup"/>
+    </div>
+    <!-- Slide 3 -->
+    <div class="carousel-slide">
+      <img src="https://images.pexels.com/photos/3065170/pexels-photo-3065170.jpeg" alt="Hair Style"/>
+    </div>
+    <!-- Slide 4 -->
+    <div class="carousel-slide">
+      <img src="https://images.pexels.com/photos/3997981/pexels-photo-3997981.jpeg" alt="Facial Treatment"/>
+    </div>
+    <!-- Slide 5 -->
+    <div class="carousel-slide">
+      <img src="https://images.pexels.com/photos/7755212/pexels-photo-7755212.jpeg" alt="Nail Art"/>
+    </div>
+  </div>
+
+  <!-- Hero Content Overlay -->
+  <div class="hero-overlay">
+    <div class="hero-text">
+    <h1>Roshni Beauty Home Services</h1>
+<h2>Professional Salon & Makeup Services at Your Doorstep</h2>
+
+      <p>
+        Empowering Beauty with Professional Home Services and Specialized
+        Expertise in Beauty Treatments
+      </p>
+      <div class="hero-buttons">
+        {% if user.is_authenticated %}
+          <a href="{% url 'booking' %}" class="btn btn-primary-custom">Book Now</a>
+        {% else %}
+          <a href="{% url 'register' %}" class="btn btn-primary-custom">Register & Book</a>
+          <a href="{% url 'login' %}" class="btn btn-outline-custom">Login</a>
+        {% endif %}
+        <a href="{% url 'services' %}" class="btn btn-outline-custom">Our Services</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="carousel-progress"></div>
+
+  <!-- Navigation Controls -->
+  <div class="carousel-controls">
+    <div class="carousel-control active" data-slide="0"></div>
+    <div class="carousel-control" data-slide="1"></div>
+    <div class="carousel-control" data-slide="2"></div>
+    <div class="carousel-control" data-slide="3"></div>
+    <div class="carousel-control" data-slide="4"></div>
+  </div>
+
+  <!-- Navigation Arrows -->
+  <div class="carousel-nav">
+    <div class="carousel-nav-btn prev"><i class="fas fa-chevron-left"></i></div>
+    <div class="carousel-nav-btn next"><i class="fas fa-chevron-right"></i></div>
+  </div>
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const slides = document.querySelectorAll(".carousel-slide");
+  const controls = document.querySelectorAll(".carousel-control");
+  const progressBar = document.querySelector(".carousel-progress");
+  const prevBtn = document.querySelector(".carousel-nav-btn.prev");
+  const nextBtn = document.querySelector(".carousel-nav-btn.next");
+  let current = 0;
+  let interval = null;
+  const slideTime = 4000;
+
+  function showSlide(idx) {
+    slides.forEach((slide, i) => {
+      slide.style.display = i === idx ? "block" : "none";
+    });
+    controls.forEach((ctrl, i) => {
+      ctrl.classList.toggle("active", i === idx);
+    });
+    updateProgressBar(idx);
+    current = idx;
+  }
+
+  function nextSlide() { showSlide((current + 1) % slides.length); }
+  function prevSlide() { showSlide((current - 1 + slides.length) % slides.length); }
+
+  function updateProgressBar(idx) {
+    if (progressBar) {
+      progressBar.style.width = ((idx + 1) / slides.length) * 100 + "%";
+    }
+  }
+
+  controls.forEach((ctrl, i) => {
+    ctrl.addEventListener("click", () => { showSlide(i); resetInterval(); });
+  });
+  if (nextBtn) nextBtn.addEventListener("click", () => { nextSlide(); resetInterval(); });
+  if (prevBtn) prevBtn.addEventListener("click", () => { prevSlide(); resetInterval(); });
+
+  function resetInterval() {
+    clearInterval(interval);
+    interval = setInterval(nextSlide, slideTime);
+  }
+
+  slides.forEach((slide, i) => { slide.style.display = i === 0 ? "block" : "none"; });
+  showSlide(0);
+  interval = setInterval(nextSlide, slideTime);
+});
+</script>
+
+{% endblock %}

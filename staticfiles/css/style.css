@@ -1,0 +1,179 @@
+/* ==============================
+   Global Styles
+============================== */
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f9fafc;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* ==============================
+   Hero Section
+============================== */
+.hero-section,
+.hero-section-small {
+  position: relative;
+  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+              url('/static/images/hero-bg.jpg') center/cover no-repeat;
+  color: #fff;
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.hero-section-small {
+  padding: 80px 20px;
+}
+
+.hero-section h1,
+.hero-section-small h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.hero-section p,
+.hero-section-small p {
+  font-size: 1.2rem;
+}
+
+/* ==============================
+   Buttons
+============================== */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #d63384, #a83279);
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #a83279, #6f42c1);
+}
+
+.btn-light {
+  background: #fff;
+  color: #d63384;
+  border: 1px solid #ddd;
+}
+
+.btn-light:hover {
+  background: #f1f1f1;
+  transform: scale(1.05);
+}
+
+/* ==============================
+   Cards
+============================== */
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+/* ==============================
+   Forms
+============================== */
+form input, 
+form select, 
+form textarea {
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  width: 100%;
+  transition: border 0.3s ease;
+}
+
+form input:focus, 
+form select:focus, 
+form textarea:focus {
+  outline: none;
+  border-color: #d63384;
+  box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.2);
+}
+
+/* ==============================
+   Navbar
+============================== */
+.navbar {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.navbar a {
+  font-weight: 500;
+  color: #333;
+  margin-right: 15px;
+}
+
+.navbar a:hover {
+  color: #d63384;
+}
+
+/* ==============================
+   Footer
+============================== */
+footer {
+  background: #111;
+  color: #eee;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+footer a {
+  color: #d63384;
+}
+
+footer a:hover {
+  color: #fff;
+}
+
+/* ==============================
+   Animations
+============================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================
+   Utility Classes
+============================== */
+.text-primary {
+  color: #d63384 !important;
+}
+
+.bg-primary {
+  background: #d63384 !important;
+}

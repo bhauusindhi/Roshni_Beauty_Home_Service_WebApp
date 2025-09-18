@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - Roshni Beauty Parlor{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user"></i> Profile
+                        </h4>
+                    </div>
+                    <div class="card-body text-center">
+                        {% if user_profile.profile_picture %}
+                            <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" 
+                                 class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                                 style="width: 120px; height: 120px;">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <h5 class="card-title">{{ user.get_full_name|default:user.username }}</h5>
+                        <p class="text-muted">{{ user.email }}</p>
+                        
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h6 class="text-primary">{{ user.bookings.count }}</h6>
+                                <small class="text-muted">Bookings</small>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="text-primary">{{ user.reviews.count }}</h6>
+                                <small class="text-muted">Reviews</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-light">
+                        <h4 class="mb-0">
+                            <i class="fas fa-user-edit"></i> Edit Profile
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data" id="profile-form">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number</label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.phone.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.date_of_birth.id_for_label }}" class="form-label">Date of Birth</label>
+                                    {{ form.date_of_birth }}
+                                    {% if form.date_of_birth.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_of_birth.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.address.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">This address will be used for home service delivery</small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                                {{ form.profile_picture }}
+                                {% if form.profile_picture.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.profile_picture.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Upload a profile picture (optional)</small>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card shadow-lg mt-4">
+                    <div class="card-header bg-light">
+                        <h4 class="mb-0">
+                            <i class="fas fa-calendar-check"></i> Recent Bookings
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {% if user.bookings.all %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for booking in user.bookings.all|slice:":5" %}
+                                        <tr>
+                                            <td>{{ booking.service.name }}</td>
+                                            <td>{{ booking.date|date:"M d, Y" }}</td>
+                                            <td>
+                                                <span class="badge bg-{% if booking.status == 'confirmed' %}success{% elif booking.status == 'pending' %}warning{% elif booking.status == 'completed' %}info{% else %}danger{% endif %}">
+                                                    {{ booking.status|title }}
+                                                </span>
+                                            </td>
+                                            <td>₹{{ booking.total_amount }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary">
+                                    View All Bookings
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                <h5>No bookings yet</h5>
+                                <p class="text-muted">Start by booking your first beauty service!</p>
+                                <a href="{% url 'booking' %}" class="btn btn-primary">
+                                    <i class="fas fa-calendar-plus"></i> Book Now
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

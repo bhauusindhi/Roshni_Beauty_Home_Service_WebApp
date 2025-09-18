@@ -1,0 +1,83 @@
+   {% extends 'base.html' %}
+
+{% block title %}Testimonials - Roshni Beauty Parlor{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section-small">
+  <div class="container">
+    <div class="row align-items-center min-vh-50">
+      <div class="col-lg-12 text-center">
+        <h1 class="display-4 fw-bold text-white mb-4">Client Testimonials</h1>
+        <p class="lead text-white">What our satisfied customers say about us</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      {% for testimonial in testimonials %}
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card h-100 testimonial-card">
+            
+            <!-- Avatar -->
+            {% if testimonial.image %}
+              <div class="text-center pt-3">
+                <img src="{{ testimonial.image.url }}"
+                     class="rounded-circle"
+                     alt="{{ testimonial.name }}"
+                     style="width: 80px; height: 80px; object-fit: cover" />
+              </div>
+            {% else %}
+              <div class="text-center pt-3">
+                <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center"
+                     style="width: 80px; height: 80px">
+                  <i class="fas fa-user text-white fa-2x"></i>
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Card Body -->
+            <div class="card-body text-center">
+              
+              <!-- Rating Stars -->
+              <div class="mb-3">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= testimonial.rating %}
+                    <i class="fas fa-star text-warning"></i>
+                  {% else %}
+                    <i class="far fa-star text-warning"></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <p class="card-text">"{{ testimonial.comment }}"</p>
+              <h6 class="card-title">{{ testimonial.name }}</h6>
+              <small class="text-muted">{{ testimonial.service }}</small>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center">
+          <h3>No testimonials available yet.</h3>
+          <p>Be the first to share your experience with us!</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+  <div class="container text-center">
+    <h2 class="display-5 fw-bold mb-4">Ready to Experience Our Services?</h2>
+    <p class="lead mb-4">
+      Book your appointment today and join our satisfied customers
+    </p>
+    <a href="{% url 'booking' %}" class="btn btn-light btn-lg">Book Appointment</a>
+  </div>
+</section>
+{% endblock %}

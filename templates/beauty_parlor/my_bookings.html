@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings - Roshni Beauty Parlor{% endblock %}
+
+{% block content %}
+<section class="py-5 mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-lg">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+              <i class="fas fa-calendar-check"></i> My Bookings
+            </h3>
+          </div>
+          <div class="card-body">
+            {% if bookings %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Service</th>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for booking in bookings %}
+                  <tr>
+                    <td><strong>#{{ booking.id }}</strong></td>
+                    <td>
+                      <strong>{{ booking.service.name }}</strong><br />
+                      <small class="text-muted">{{ booking.service.category|title }}</small>
+                    </td>
+                    <td>
+                      <strong>{{ booking.date|date:"M d, Y" }}</strong><br />
+                      <small class="text-muted">{{ booking.time|time:"g:i A" }}</small>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if booking.status == 'confirmed' %}success{% elif booking.status == 'pending' %}warning{% elif booking.status == 'completed' %}info{% else %}danger{% endif %}">
+                        {{ booking.status|title }}
+                      </span>
+                    </td>
+                    <td><strong>₹{{ booking.total_amount }}</strong></td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <a href="{% url 'booking_detail' booking.id %}" class="btn btn-sm btn-outline-primary">
+                          <i class="fas fa-eye"></i> View
+                        </a>
+                        {% if booking.status == 'pending' %}
+                        <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-sm btn-outline-danger"
+                          onclick="return confirm('Are you sure you want to cancel this booking?')">
+                          <i class="fas fa-times"></i> Cancel
+                        </a>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="card bg-light">
+                  <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-info-circle text-primary"></i> Booking Status Guide</h6>
+                    <ul class="list-unstyled mb-0">
+                      <li><span class="badge bg-warning">Pending</span> - Awaiting confirmation</li>
+                      <li><span class="badge bg-success">Confirmed</span> - Service confirmed</li>
+                      <li><span class="badge bg-info">Completed</span> - Service completed</li>
+                      <li><span class="badge bg-danger">Cancelled</span> - Booking cancelled</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card bg-light">
+                  <div class="card-body">
+                    <h6 class="card-title"><i class="fas fa-calendar-plus text-primary"></i> Need Another Service?</h6>
+                    <p class="card-text">
+                      Book your next beauty service and enjoy our professional home services.
+                    </p>
+                    <a href="{% url 'booking' %}" class="btn btn-primary">
+                      <i class="fas fa-calendar-plus"></i> Book New Service
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+              <i class="fas fa-calendar-times fa-4x text-muted mb-4"></i>
+              <h4>No Bookings Found</h4>
+              <p class="text-muted">
+                You haven't made any bookings yet. Start by booking your first beauty service!
+              </p>
+              <a href="{% url 'booking' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-calendar-plus"></i> Book Your First Service
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

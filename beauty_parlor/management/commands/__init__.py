@@ -1,0 +1,1 @@
+# Commands package for beauty_parlor app 
